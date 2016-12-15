@@ -46,9 +46,10 @@ public class SessionController {
         }
         if (user.getPassword().equals(password)) {
             UserProfile testUser = accountService.getUserById(user.getId());
-            if(testUser!=null)
-            httpSession.setAttribute("userId",user.getId()); //такое чувство, что вывод врет и по факту айдишники нумеруются с единицы
-            return new SuccessResponse("successfully_authorized");
+            if(testUser!=null) {
+                httpSession.setAttribute("userId", user.getId()); //такое чувство, что вывод врет и по факту айдишники нумеруются с единицы
+                return new SuccessResponse("successfully_authorized");
+            }
         }
         throw new ExceptionWithErrorCode("S02","wrong_login_password");
     }
