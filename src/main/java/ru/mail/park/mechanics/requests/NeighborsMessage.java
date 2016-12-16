@@ -1,15 +1,17 @@
 package ru.mail.park.mechanics.requests;
 
+import java.util.List;
+
 //это уже сообщение для юзера с окрестностями клекти, о которой он спрашивал
 public class NeighborsMessage { // не уверен в названии
     public static class Request{ //так-то это скорее response, чем request
-        private String neighbors;
+        private List<Integer> neighbors;
 
-        public String getNeighbors() {
+        public List<Integer> getNeighbors() {
             return neighbors;
         }
 
-        public void setNeighbors(String neighbors) {
+        public void setNeighbors(List<Integer> neighbors) {
             this.neighbors = neighbors;
         }
     }

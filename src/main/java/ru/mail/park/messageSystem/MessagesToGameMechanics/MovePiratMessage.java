@@ -17,21 +17,17 @@ public class MovePiratMessage extends  MessageToGameMechanics {
     private CoordPair targetCell;
 
     @NotNull
-    private Long firstPlayerId;
+    private Long playerId;
 
-    @NotNull
-    private Long secondPlayerId;
-
-    public MovePiratMessage(Address from, Address to, @NotNull Integer piratId, @NotNull CoordPair targetCell, @NotNull Long firstPlayerId, @NotNull Long secondPlayerId) {
+    public MovePiratMessage(Address from, Address to, @NotNull Integer piratId, @NotNull CoordPair targetCell, @NotNull Long playerId) {
         super(from, to);
         this.piratId = piratId;
         this.targetCell = targetCell;
-        this.firstPlayerId = firstPlayerId;
-        this.secondPlayerId = secondPlayerId;
+        this.playerId = playerId;
     }
 
     @Override
     public void exec(GameMechanicsInNewThread gameMechanicsInNewThread){
-        gameMechanicsInNewThread.movePirat(piratId,targetCell, firstPlayerId, secondPlayerId);
+        gameMechanicsInNewThread.movePirat(piratId,targetCell, playerId);
     }
 }

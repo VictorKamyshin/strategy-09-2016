@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mail.park.mechanics.internal.GameInitService;
-import ru.mail.park.mechanics.internal.GameSessionService;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.websocket.RemotePointService;
@@ -28,9 +27,6 @@ public class GameMechanicsImpl implements GameMechanics {
     private RemotePointService remotePointService;
 
     @NotNull
-    private  GameSessionService gameSessionService;
-
-    @NotNull
     private final GameInitService gameInitService;
 
     @NotNull
@@ -39,21 +35,19 @@ public class GameMechanicsImpl implements GameMechanics {
     @SuppressWarnings("LongLine")
     public GameMechanicsImpl(@NotNull AccountService accountService,
                              @NotNull RemotePointService remotePointService,
-                             @NotNull GameSessionService gameSessionService,
                              @NotNull GameInitService gameInitService) {
         this.accountService = accountService;
         this.remotePointService = remotePointService;
-        this.gameSessionService = gameSessionService;
         this.gameInitService = gameInitService;
     }
 
     @Override
     public void addUser(@NotNull Long userId) {
         if(waiters.contains(userId)){
-            //System.out.println("Такой пользователь уже есть в очереди. Второго нам не надо");
+            LOGGER.debug("Player, who already state in queue, try to up again");
             return;
         }
-        //System.out.println("встал в очередь игрок" + userId);
+        LOGGER.debug("Player added in queue");
         waiters.add(userId);
         tryStartGame();
     }

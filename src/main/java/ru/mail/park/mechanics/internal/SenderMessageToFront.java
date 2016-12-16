@@ -9,6 +9,7 @@ import ru.mail.park.mechanics.requests.BoardMapForUsers;
 import ru.mail.park.mechanics.requests.NeighborsMessage;
 import ru.mail.park.mechanics.requests.PiratMoveMessage;
 import ru.mail.park.mechanics.requests.ReplyPingMessage;
+import ru.mail.park.mechanics.utils.results.MovementResult;
 import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
 import ru.mail.park.messageSystem.Address;
@@ -20,6 +21,7 @@ import ru.mail.park.websocket.RemotePointService;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -79,7 +81,7 @@ public class SenderMessageToFront implements  Runnable, Abonent{
 
     public void sendNeighbors(List<Integer> neighborsList, Long playerId) {
         final NeighborsMessage.Request messageWithNeighbors = new NeighborsMessage.Request();
-        messageWithNeighbors.setNeighbors(new Gson().toJson(neighborsList));
+        messageWithNeighbors.setNeighbors(neighborsList);
         try{
             final Message responseMessage = new Message(NeighborsMessage.Request.class.getName(),
                     objectMapper.writeValueAsString(messageWithNeighbors));
@@ -92,9 +94,12 @@ public class SenderMessageToFront implements  Runnable, Abonent{
     public void piratMove(List<Result> movementResults, Long activePlayerId, Long passivePlayerId){
         final PiratMoveMessage.Request newTurnMessage = new PiratMoveMessage.Request();
         newTurnMessage.setActive(false);
+        final List<MovementResult> moveResults = new ArrayList<>();
+        for(Result rs:movementResults){
+            moveResults.add((MovementResult)rs);
+        }
         newTurnMessage.setMovement(new Gson().toJson(movementResults));
         try {
-            //System.out.println("Пират передвинут. Эй, фронт, лови сообщение для того, кто ходил");
             final Message responseMessageToActivePLayer = new Message(PiratMoveMessage.Request.class.getName(),
                     objectMapper.writeValueAsString(newTurnMessage));
             remotePointService.sendMessageToUser(activePlayerId,responseMessageToActivePLayer);
@@ -102,7 +107,6 @@ public class SenderMessageToFront implements  Runnable, Abonent{
             e.printStackTrace();
         }
         try {
-            //System.out.println("Пират передвинут. Эй, фронт, лови сообщение для того, кто будет ходить");
             newTurnMessage.setActive(true);
             final Message responseMessageToPassivePlayer = new Message(PiratMoveMessage.Request.class.getName(),
                     objectMapper.writeValueAsString(newTurnMessage));
@@ -112,7 +116,7 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
-    public void initGame(String BoardMap, UserProfile firstPLayer, UserProfile secondPlayer){
+    public void initGame(List<Integer> BoardMap, UserProfile firstPLayer, UserProfile secondPlayer){
 
         final BoardMapForUsers.Request requestToFirstPlayer = new BoardMapForUsers.Request();
         requestToFirstPlayer.setGameBoard(BoardMap);
@@ -132,7 +136,6 @@ public class SenderMessageToFront implements  Runnable, Abonent{
             final Message messageToSecond = new Message(BoardMapForUsers.Request.class.getName(),
                     objectMapper.writeValueAsString(requestToSecondPlayer));
             remotePointService.sendMessageToUser(secondPlayer.getId(), messageToSecond);
-            System.out.println("разослали игровое поле");
         } catch (IOException e) {
             e.printStackTrace();
         }

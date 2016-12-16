@@ -226,17 +226,14 @@ public class GameBoard {
             final Integer targetY = piratMove.getTargetCell().getY();
             final Integer piratId = piratMove.getPiratId();
             if(!boardMap[starterX][starterY].beforeMoveOut(piratId, results, piratMove.getTargetCell())){
-                System.out.println("beforeMoveOut");
                 return results;
             }
 
             if (!boardMap[targetX][targetY].beforeMoveIn(piratId,results)) {
-                System.out.println("beforeMoveIn");
                 return results;
             }
 
             if (!boardMap[starterX][starterY].moveOut(piratId,results)) {
-                System.out.println("moveOut");
                 return results;
             }
 
@@ -244,7 +241,6 @@ public class GameBoard {
 
             List<Integer> deadPirats = new ArrayList<>();
             if(!boardMap[targetX][targetY].moveIn(piratId, results, deadPirats)){
-                System.out.println("moveIn");
                 return  results;
             }
 
@@ -258,47 +254,6 @@ public class GameBoard {
 
             return results;
         }
-        /*
-        private List<MovementResult> movePirat(Movement piratMove){
-            final List<MovementResult> movementResult = new ArrayList<>();
-            //System.out.println("мы добрались до игровой доски");
-            if(isCellPlacedNearPirat(piratMove.getPiratId(),piratMove.getTargetCell())){ //начальная и конечная клетки заданны корректно
-                final Integer starterX = piratMove.getStartCell().getX();
-                final Integer starterY = piratMove.getStartCell().getY();
-                final Integer targetX = piratMove.getTargetCell().getX();
-                final Integer targetY = piratMove.getTargetCell().getY();
-                //и тут, по идее, появится еще миллион правил и проверок?
-                //миллион - это сколько? Форт с пиратом, да неизвестные клетки с монетой, а что еще?
-                if(boardMap[starterX][starterY].piratLeave(piratMove.getPiratId())){
-                    //пират успешно покинул клетку
-                    //System.out.println("пират успешно покинул клетку");
-                    pirats[piratMove.getPiratId() - 3 * playerId].setLocation(piratMove.getTargetCell()); //тут тоже что-то может пойти не так
-
-                    movementResult.add(new MovementResult(playerId,piratMove.getPiratId() - 3 * playerId,piratMove.getTargetCell()));
-                    //сам пират точно передвинулся, а вот передвинулся ли кто-то еще?
-                    //например, в клетке может оказаться крокодил
-                    final Integer[] deadPirats = boardMap[targetX][targetY].killEnemy(piratMove.getPiratId());
-                    //пират, входя в клетку, убивает всех врагов в ней
-                    //теперь их надо отправить на родной корабль
-                    for(Integer piratId: deadPirats) {
-                        System.out.println("Двеннадцать человек на сундук мертвеца!");
-                        final Integer piratOwnerId = piratId / 3;
-                        final CoordPair shipCord = players[piratOwnerId].getShipCord();
-                        players[piratOwnerId].pirats[piratId-3 * piratOwnerId].setLocation(shipCord);
-                        boardMap[shipCord.getX()][shipCord.getY()].setPiratId(piratId);
-                        movementResult.add(new MovementResult(piratOwnerId,piratId-3*piratOwnerId,shipCord));
-                    } //но эту штуку надо будет видеть еще и снаружи, то есть, скорее всего, мы будет возвращать
-                    //массив пиратов, у которых сменилась координата
-                    boardMap[targetX][targetY].setPiratId(piratMove.getPiratId());
-                    //System.out.println("Обработка хода прошла корректно. Вроде бы");
-                    return movementResult;
-                }
-                movementResult.add(new MovementResult(-1));
-                return movementResult; //пирата не было в клетке или он не мог ее покинуть
-            }
-            movementResult.add(new MovementResult(-2));
-            return movementResult; // клетки не являлись соседями
-        }*/
 
         private Boolean isCellPlacedNearPirat(Integer piratId, CoordPair targetCell){
             if(!getCell(getPiratCord(piratId)).getUnderShip()) {

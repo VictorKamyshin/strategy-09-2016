@@ -32,6 +32,9 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     @NotNull
     private final Map<Long, GameContent> usersToGamesMap = new HashMap<>(); //связь юзеров и игр
 
+    @NotNull
+    private final Map<Long, Long> userToUserMap = new HashMap<>();
+
     private MessageSystem ms;
 
     private static final long STEP_TIME = 100;
@@ -70,18 +73,19 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         final GameContent game = new GameContent(firstPlayer.getId(), secondPlayer.getId()); //Сообщение для игровой механики
         usersToGamesMap.put(firstPlayer.getId(), game);
         usersToGamesMap.put(secondPlayer.getId(), game); // создали игру, запомнили ее связь с пользователями
-        System.out.print("игру создали. пытаемся разослать поле игрокам");
+        userToUserMap.put(firstPlayer.getId(),secondPlayer.getId());
+        userToUserMap.put(secondPlayer.getId(), firstPlayer.getId());
         ms.sendMessage(new InitGameMessageToFront(myAddress,senderAddress,game.getMap(),firstPlayer,secondPlayer));
     }
 
-    public void movePirat(Integer piratId, CoordPair targetCell, Long firstPlayerId, Long secondPlayerId) {
+    public void movePirat(Integer piratId, CoordPair targetCell, Long firstPlayerId) {
         if (usersToGamesMap.containsKey(firstPlayerId)) {
             final List<Result> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
             if(result==null){
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId));
                 // то отправить одно сообщение //testMessage.setMyMessage("Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки");
             } else {
-                ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, secondPlayerId));
+                ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
         }
     }

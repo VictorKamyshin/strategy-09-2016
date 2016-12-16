@@ -1,6 +1,5 @@
 package ru.mail.park.mechanics;
 
-import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mail.park.mechanics.game.CoordPair;
@@ -71,17 +70,11 @@ public class GameContent { //класс, управляющий одной от�
     @Nullable
     public List<Result> movePirat(Integer piratId, CoordPair targetCell, Long playerId){
         if(!activePlayerId.equals(playerId)){
-            //System.out.println("Какой-то подозрительный юзер. Пытается ходить не в свой ход");
-            //System.out.println(playerId + " " + firstPlayerId + " " + secondPlayerId + " " + activePlayerId);
             return null;
         }
         final Integer playerGameId = gameUserIdToGameUserId(playerId);
         final Integer piratIngameId = piratId + 3 * playerGameId;
-//        System.out.println("Пытаемся совершить ход");
-//        System.out.println("piratId="+ piratId + " targetX="+targetCell.getX()+" targetCellY="+targetCell.getY());
-//        System.out.println(getPiratCord(piratIngameId, playerGameId).getX()+"   " + getPiratCord(piratIngameId, playerGameId).getY());
         move = new Movement(piratIngameId, getPiratCord(piratIngameId, playerGameId), targetCell);
-        //System.out.println("ходит пират с айдишником " + (piratIngameId));
         final List<Result> result = board.movePirat(move, playerGameId); //отдавать один индекс вместо двух
         if(result.get(0).getStatus()>-1){
             move = null;
@@ -110,13 +103,9 @@ public class GameContent { //класс, управляющий одной от�
         return move.getStatus();
     } // задел на будущее, когда появятся стрелки
 
-    public String getMap(){
+    public List<Integer> getMap(){
         List<Integer> tempList = board.getBoardMap();
-        String json = new Gson().toJson(tempList);
-       // AbstractCell testCell = board.getCell(new CoordPair(2,2));
-       // String testJson = new Gson().toJson(testCell);
-       // System.out.println(testJson);
-        return json;
+        return tempList;
     }
 
     public Integer getCountOfTurns() {
