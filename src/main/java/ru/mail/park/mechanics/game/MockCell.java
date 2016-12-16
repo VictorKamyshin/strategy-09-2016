@@ -3,7 +3,8 @@ package ru.mail.park.mechanics.game;
 public class MockCell extends AbstractCell {
     private static final Integer NUMNEIGHBORS = 0;
 
-    public MockCell(Integer id, CoordPair MyCord) {
+    public MockCell(Integer id, CoordPair MyCord, GameBoard gameBoard) {
+        super.gameBoard = gameBoard;
         super.id = id;
         super.cord = MyCord;
         super.neighbors = new CoordPair[NUMNEIGHBORS];

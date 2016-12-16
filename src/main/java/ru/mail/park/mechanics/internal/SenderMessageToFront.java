@@ -9,7 +9,7 @@ import ru.mail.park.mechanics.requests.BoardMapForUsers;
 import ru.mail.park.mechanics.requests.NeighborsMessage;
 import ru.mail.park.mechanics.requests.PiratMoveMessage;
 import ru.mail.park.mechanics.requests.ReplyPingMessage;
-import ru.mail.park.mechanics.utils.MovementResult;
+import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
 import ru.mail.park.messageSystem.Address;
 import ru.mail.park.messageSystem.MessageSystem;
@@ -89,7 +89,7 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
-    public void piratMove(List<MovementResult> movementResults, Long activePlayerId, Long passivePlayerId){
+    public void piratMove(List<Result> movementResults, Long activePlayerId, Long passivePlayerId){
         final PiratMoveMessage.Request newTurnMessage = new PiratMoveMessage.Request();
         newTurnMessage.setActive(false);
         newTurnMessage.setMovement(new Gson().toJson(movementResults));

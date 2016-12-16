@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mail.park.mechanics.GameContent;
 import ru.mail.park.mechanics.game.CoordPair;
-import ru.mail.park.mechanics.utils.MovementResult;
+import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
 import ru.mail.park.messageSystem.Address;
 import ru.mail.park.messageSystem.MessageSystem;
@@ -76,7 +76,7 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
 
     public void movePirat(Integer piratId, CoordPair targetCell, Long firstPlayerId, Long secondPlayerId) {
         if (usersToGamesMap.containsKey(firstPlayerId)) {
-            final List<MovementResult> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
+            final List<Result> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
             if(result==null){
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId));
                 // то отправить одно сообщение //testMessage.setMyMessage("Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки");

@@ -1,6 +1,7 @@
 package ru.mail.park.mechanics.game;
 
-import ru.mail.park.mechanics.utils.MovementResult;
+import ru.mail.park.mechanics.utils.results.MovementResult;
+import ru.mail.park.mechanics.utils.results.Result;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,8 +9,8 @@ import java.util.List;
 import java.util.Vector;
 
 public class GameBoard {
-    private static final Integer BOARDHIGHT = 13;
-    private static final Integer BOARDWIGHT = 13;
+    public static final Integer BOARDHIGHT = 13;
+    public static final Integer BOARDWIGHT = 13;
     private static final Integer ISLAND_HIGHT = BOARDHIGHT -2 ;
     private static final Integer ISLAND_WIGHT = BOARDWIGHT -2 ;
     private static final Integer NUMBEFOFCELL = 117;
@@ -19,7 +20,7 @@ public class GameBoard {
     public GameBoard() {
         final Vector<AbstractCell> cellIdPool = new Vector<>();
         for(int i = 0; i < NUMBEFOFCELL; ++i) {
-            cellIdPool.add(new BoardCell(i));
+            cellIdPool.add(new BoardCell(i, this));
         }
         Collections.shuffle(cellIdPool);
         Integer currentElement = 0;
@@ -35,38 +36,38 @@ public class GameBoard {
         }
         Integer coastId = NUMBEFOFCELL;
         for(int i = 1; i < ( ISLAND_HIGHT + 1 ); ++i) {
-            boardMap[i][0]=new CoastCell(coastId, new CoordPair(i,0));
+            boardMap[i][0]=new CoastCell(coastId, new CoordPair(i,0), this);
             ++coastId;
         }
 
-        boardMap[ISLAND_HIGHT][1]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT,1));
+        boardMap[ISLAND_HIGHT][1]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT,1), this);
         ++coastId;
 
         for(int j = 1; j < (ISLAND_WIGHT+1); ++j) {
-            boardMap[ISLAND_HIGHT+1][j]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT+1,j));
+            boardMap[ISLAND_HIGHT+1][j]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT+1,j), this);
             ++coastId;
         }
 
-        boardMap[ISLAND_HIGHT][ISLAND_WIGHT]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT,ISLAND_WIGHT));
+        boardMap[ISLAND_HIGHT][ISLAND_WIGHT]=new CoastCell(coastId, new CoordPair(ISLAND_HIGHT,ISLAND_WIGHT), this);
         ++coastId;
 
         for(int i = ISLAND_HIGHT; i >0; --i) {
-            boardMap[i][ISLAND_WIGHT+1]=new CoastCell(coastId, new CoordPair(i,ISLAND_WIGHT+1));
+            boardMap[i][ISLAND_WIGHT+1]=new CoastCell(coastId, new CoordPair(i,ISLAND_WIGHT+1), this);
             ++coastId;
         }
-        boardMap[1][ISLAND_WIGHT]=new CoastCell(coastId, new CoordPair(1,ISLAND_WIGHT));
+        boardMap[1][ISLAND_WIGHT]=new CoastCell(coastId, new CoordPair(1,ISLAND_WIGHT), this);
         ++coastId;
         for(int j = ISLAND_WIGHT; j > 0; --j) {
-            boardMap[0][j]=new CoastCell(coastId, new CoordPair(0,j));
+            boardMap[0][j]=new CoastCell(coastId, new CoordPair(0,j), this);
             ++coastId;
         }
-        boardMap[1][1]=new CoastCell(coastId, new CoordPair(1,1));
+        boardMap[1][1]=new CoastCell(coastId, new CoordPair(1,1), this);
         ++coastId;
 
-        boardMap[0][0]=new MockCell(-1, new CoordPair(0,0));
-        boardMap[ISLAND_HIGHT+1][0]=new MockCell(-2, new CoordPair(ISLAND_HIGHT+1,0));
-        boardMap[ISLAND_HIGHT+1][ISLAND_WIGHT+1]=new MockCell(-3, new CoordPair(ISLAND_HIGHT+1,ISLAND_WIGHT+1));
-        boardMap[0][ISLAND_WIGHT+1]=new MockCell(-4, new CoordPair(0,ISLAND_WIGHT+1));
+        boardMap[0][0]=new MockCell(-1, new CoordPair(0,0), this);
+        boardMap[ISLAND_HIGHT+1][0]=new MockCell(-2, new CoordPair(ISLAND_HIGHT+1,0), this);
+        boardMap[ISLAND_HIGHT+1][ISLAND_WIGHT+1]=new MockCell(-3, new CoordPair(ISLAND_HIGHT+1,ISLAND_WIGHT+1), this);
+        boardMap[0][ISLAND_WIGHT+1]=new MockCell(-4, new CoordPair(0,ISLAND_WIGHT+1), this);
 
         //инициализируем игрока. Так-то, это должно быть в конструкторе
         players[0] = new GamePlayer(0);
@@ -78,6 +79,10 @@ public class GameBoard {
         return players[playerId].getShipAvailableDirection();
     }
 
+    public Boolean isShipNeighbors(Integer playerId, CoordPair targetCell){
+        return players[playerId].isShipNeighbors(targetCell);
+    }
+
     public CoordPair getShipCord(Integer playerId){
         return players[playerId].getShipCord();
     }
@@ -86,8 +91,8 @@ public class GameBoard {
         return players[playerId].moveShip(direction);
     }
 
-    public List<MovementResult> movePirat(Movement move, Integer playerId){
-        return players[playerId].movePirat(move);
+    public List<Result> movePirat(Movement move, Integer playerId){
+        return players[playerId].move(move);
     }
 
     public AbstractCell getCell(CoordPair cellCord){
@@ -155,6 +160,10 @@ public class GameBoard {
             }
         }
 
+        private Boolean isShipNeighbors(CoordPair targetCell){
+            return ship.isNeighbors(targetCell);
+        }
+
         private CoordPair[] getShipAvailableDirection(){
             return ship.getAvaliableDirection();
         }
@@ -209,6 +218,47 @@ public class GameBoard {
             return false;
         }
 
+        private List<Result> move(Movement piratMove){
+            final List<Result> results = new ArrayList<>();
+            final Integer starterX = piratMove.getStartCell().getX();
+            final Integer starterY = piratMove.getStartCell().getY();
+            final Integer targetX = piratMove.getTargetCell().getX();
+            final Integer targetY = piratMove.getTargetCell().getY();
+            final Integer piratId = piratMove.getPiratId();
+            if(!boardMap[starterX][starterY].beforeMoveOut(piratId, results, piratMove.getTargetCell())){
+                System.out.println("beforeMoveOut");
+                return results;
+            }
+
+            if (!boardMap[targetX][targetY].beforeMoveIn(piratId,results)) {
+                System.out.println("beforeMoveIn");
+                return results;
+            }
+
+            if (!boardMap[starterX][starterY].moveOut(piratId,results)) {
+                System.out.println("moveOut");
+                return results;
+            }
+
+            pirats[piratMove.getPiratId() - 3 * playerId].setLocation(piratMove.getTargetCell());
+
+            List<Integer> deadPirats = new ArrayList<>();
+            if(!boardMap[targetX][targetY].moveIn(piratId, results, deadPirats)){
+                System.out.println("moveIn");
+                return  results;
+            }
+
+            for(Integer deadPiratId: deadPirats) {
+                final Integer piratOwner = deadPiratId / 3;
+                final CoordPair shipCord = players[piratOwner].getShipCord();
+                boardMap[shipCord.getX()][shipCord.getY()].setPiratId(deadPiratId);
+                players[piratOwner].pirats[deadPiratId-3*piratOwner].setLocation(shipCord);
+                results.add(new MovementResult(piratOwner,deadPiratId-3*piratOwner,shipCord));
+            } //мы не можем провести мертвого пирата через стандартный обработчик движения
+
+            return results;
+        }
+        /*
         private List<MovementResult> movePirat(Movement piratMove){
             final List<MovementResult> movementResult = new ArrayList<>();
             //System.out.println("мы добрались до игровой доски");
@@ -248,7 +298,7 @@ public class GameBoard {
             }
             movementResult.add(new MovementResult(-2));
             return movementResult; // клетки не являлись соседями
-        }
+        }*/
 
         private Boolean isCellPlacedNearPirat(Integer piratId, CoordPair targetCell){
             if(!getCell(getPiratCord(piratId)).getUnderShip()) {
