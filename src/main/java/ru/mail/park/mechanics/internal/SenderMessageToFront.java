@@ -153,6 +153,10 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
+    public void sendShipMove(List<Result> results, Long activePLayerId, Long passivePlayerId){
+
+    }
+
 
     @Override
     public Address getAddress(){

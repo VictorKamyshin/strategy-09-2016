@@ -35,16 +35,6 @@ public class PingServiceImpl implements  PingService{ //просто отвеч�
     @Override
     public void sendPingResponse(Long forUser){
         ms.sendMessage(new PingReplyMessage(myAddress, senderAddress,forUser));
-        /*
-        final ReplyPingMessage.Request replyPingMessage = new ReplyPingMessage.Request();
-        replyPingMessage.setPingMessage("Up. Got ur message");
-        try {
-            final Message pingMessage = new Message(ReplyPingMessage.Request.class.getName(),
-                    objectMapper.writeValueAsString(replyPingMessage));
-            remotePointService.sendMessageToUser(forUser, pingMessage);
-        } catch( Exception e){
-            e.printStackTrace();
-        }*/
     }
 
 }

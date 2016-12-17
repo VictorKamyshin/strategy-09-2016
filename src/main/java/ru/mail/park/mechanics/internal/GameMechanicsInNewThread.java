@@ -9,10 +9,7 @@ import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
 import ru.mail.park.messageSystem.Address;
 import ru.mail.park.messageSystem.MessageSystem;
-import ru.mail.park.messageSystem.MessagesToSender.InfoMessage;
-import ru.mail.park.messageSystem.MessagesToSender.InitGameMessageToFront;
-import ru.mail.park.messageSystem.MessagesToSender.NeighborsMessage;
-import ru.mail.park.messageSystem.MessagesToSender.PiratMoveResultMessage;
+import ru.mail.park.messageSystem.MessagesToSender.*;
 import ru.mail.park.model.UserProfile;
 
 import javax.annotation.PostConstruct;
@@ -115,8 +112,10 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     public void moveShip(CoordPair direction, Long playerId){
 
         if(usersToGamesMap.containsKey(playerId)){
-            if(usersToGamesMap.get(playerId).moveShip(direction, playerId)){ //Сообщение для игровой механики
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"корабль передвинулся, но мы этого пока не увидим",playerId));
+            final List<Result> shipMovementResults = usersToGamesMap.get(playerId).moveShip(direction, playerId);
+            if(shipMovementResults!=null){ //Сообщение для игровой механики
+                ms.sendMessage(new ShipMoveToSender(myAddress,senderAddress,playerId, userToUserMap.get(playerId),shipMovementResults));
+                //ms.sendMessage(new InfoMessage(myAddress, senderAddress,"корабль передвинулся, но мы этого пока не увидим",playerId));
             } else {
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Капитан, корабль не может туда плыть.",playerId));
             }

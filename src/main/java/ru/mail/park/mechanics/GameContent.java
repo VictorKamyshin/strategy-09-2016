@@ -57,10 +57,11 @@ public class GameContent { //класс, управляющий одной от�
         return board.getShipCord(playerInGameId);
     }
 
-    public Boolean moveShip(CoordPair direction, Long playerId){
+    @Nullable
+    public List<Result> moveShip(CoordPair direction, Long playerId){
         final Integer playerGameId = gameUserIdToGameUserId(playerId);
-        final Boolean shipMove = board.moveShip(direction, playerGameId);
-        if(shipMove) {
+        final List<Result> shipMove = board.moveShip(direction, playerGameId);
+        if(shipMove!=null) {
             ++countOfTurns;
             changeActivePlayer();
         }

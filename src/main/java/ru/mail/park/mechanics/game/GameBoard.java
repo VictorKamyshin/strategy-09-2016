@@ -87,7 +87,7 @@ public class GameBoard {
         return players[playerId].getShipCord();
     }
 
-    public boolean moveShip(CoordPair direction, Integer playerId){
+    public List<Result> moveShip(CoordPair direction, Integer playerId){
         return players[playerId].moveShip(direction);
     }
 
@@ -120,6 +120,9 @@ public class GameBoard {
             return boardMap[cellCord.getX()][cellCord.getY()].getNeighbors();
         }
     }
+
+
+    //переписать ситуацию с айдишниками
 
     public Integer isPirat(CoordPair cord) { //эта штука говорит, есть ли пират в выбранной клетке
         for(GamePlayer player : players) {
@@ -195,27 +198,32 @@ public class GameBoard {
             return pirats[piratId -3 * playerId].getLocation(); //сделать поправку на то, что айдишники должны быть уникальны
         }
 
-        private Boolean moveShip(CoordPair direction){
+        private List<Result> moveShip(CoordPair direction){
             for(CoordPair tempPair:ship.getAvaliableDirection()){
                 if(CoordPair.equals(tempPair,direction)){ // такое направление вообще возможно
                     if(boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds().length>0) { //на корабле есть хоть кто-то
                         if (boardMap[CoordPair.sum(ship.neighbors[0], direction).getX()]
                                 [CoordPair.sum(ship.neighbors[0], direction).getY()].getId() < NUMBEFOFCELL) { //и с этого корабля потом можно будет сойти на остров
+                            final List<Result> results = new ArrayList<>();
                             for (Integer piratId : boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds()) { //айди всех пиратов на корабле
+
+                                results.add(new MovementResult(piratId/3, piratId % 3 , CoordPair.sum(ship.getLocation(), direction)));
+
                                 pirats[piratId - 3 * playerId].setLocation(CoordPair.sum(ship.getLocation(), direction));
                                 boardMap[CoordPair.sum(ship.getLocation(), direction).getX()]
                                         [CoordPair.sum(ship.getLocation(), direction).getY()].setPiratId(piratId - 3 * playerId);
                             }
                             boardMap[ship.getLocation().getX()][ship.getLocation().getY()].setUnderShip(false);
                             ship.setLocation(direction);
+
                             boardMap[ship.getLocation().getX()][ship.getLocation().getY()].setUnderShip(true);
                             ship.resetNeighbors();
-                            return true;
+                            return results;
                         }
                     }
                 }
             }
-            return false;
+            return null;
         }
 
         private List<Result> move(Movement piratMove){

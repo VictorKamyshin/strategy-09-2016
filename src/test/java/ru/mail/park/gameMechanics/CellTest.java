@@ -44,7 +44,7 @@ public class CellTest {
 
         boardMap[1][1].setPiratId(testPiratId);
 
-        assert(boardMap[1][1].getNeighbors().length==2);
+        //Assert.assertEquals(boardMap[1][1].getNeighbors().length == 2);
 
         final List<Result> resultsOfWrongTurn = new ArrayList<>();
         final CoordPair wrongTargerCell = new CoordPair(2,2);
