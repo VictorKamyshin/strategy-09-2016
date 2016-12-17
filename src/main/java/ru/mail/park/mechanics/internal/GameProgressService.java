@@ -6,8 +6,10 @@ import ru.mail.park.mechanics.game.CoordPair;
 import ru.mail.park.messageSystem.Address;
 import ru.mail.park.messageSystem.MessageSystem;
 import ru.mail.park.messageSystem.MessagesToGameMechanics.GetNeighborsMessage;
+import ru.mail.park.messageSystem.MessagesToGameMechanics.InitGameMessage;
 import ru.mail.park.messageSystem.MessagesToGameMechanics.MovePiratMessage;
 import ru.mail.park.messageSystem.MessagesToGameMechanics.MoveShipMessage;
+import ru.mail.park.model.UserProfile;
 
 /**
  * Created by victor on 14.11.16.
@@ -28,11 +30,7 @@ public class GameProgressService {
     }
 
     public void movePirat(Integer piratId, CoordPair targetCell, Long playerId){
-        try {
-            ms.sendMessage(new MovePiratMessage(myAddress, gameMechanincsAddress, piratId, targetCell, playerId));
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        ms.sendMessage(new MovePiratMessage(myAddress, gameMechanincsAddress, piratId, targetCell, playerId));
     }
 
     public void sendNeighbord(Integer cellIndex, Long playerId){
@@ -45,5 +43,8 @@ public class GameProgressService {
 
     }
 
+    public void initGameFor(UserProfile firstPlayer, UserProfile secondPLayer) {
+        ms.sendMessage(new InitGameMessage(myAddress,gameMechanincsAddress,firstPlayer, secondPLayer));
+    }
 
 }

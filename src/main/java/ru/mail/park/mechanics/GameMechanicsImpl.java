@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mail.park.mechanics.internal.GameInitService;
+import ru.mail.park.mechanics.internal.GameProgressService;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.websocket.RemotePointService;
@@ -27,7 +27,7 @@ public class GameMechanicsImpl implements GameMechanics {
     private RemotePointService remotePointService;
 
     @NotNull
-    private final GameInitService gameInitService;
+    private final GameProgressService gameProgressService;
 
     @NotNull
     private ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
@@ -35,10 +35,10 @@ public class GameMechanicsImpl implements GameMechanics {
     @SuppressWarnings("LongLine")
     public GameMechanicsImpl(@NotNull AccountService accountService,
                              @NotNull RemotePointService remotePointService,
-                             @NotNull GameInitService gameInitService) {
+                             @NotNull GameProgressService gameProgressService) {
         this.accountService = accountService;
         this.remotePointService = remotePointService;
-        this.gameInitService = gameInitService;
+        this.gameProgressService = gameProgressService;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class GameMechanicsImpl implements GameMechanics {
             if(matchedPlayers.size() == 2) { //если таких набралось двое, то у них начинается игра
                 final Iterator<UserProfile> iterator = matchedPlayers.iterator();
                 LOGGER.debug("We have to people, who want to play.");
-                gameInitService.initGameFor(iterator.next(), iterator.next());
+                gameProgressService.initGameFor(iterator.next(), iterator.next());
                 matchedPlayers.clear();
             }
         }
