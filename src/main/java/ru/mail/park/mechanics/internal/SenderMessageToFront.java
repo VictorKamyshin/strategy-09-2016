@@ -68,11 +68,11 @@ public class SenderMessageToFront implements  Runnable, Abonent{
     }
 
     public void infoMessage(String messageContent, Long playerId) {
-        final MessageToClient.Request testMessage = new MessageToClient.Request(); //вещь для отладки
-        testMessage.setMyMessage(messageContent);
+        final MessageToClient.Request infoMessage = new MessageToClient.Request(); //вещь для отладки
+        infoMessage.setMyMessage(messageContent);
         try {
             final Message responseMessage = new Message(MessageToClient.Request.class.getName(),
-                    objectMapper.writeValueAsString(testMessage));
+                    objectMapper.writeValueAsString(infoMessage));
             remotePointService.sendMessageToUser(playerId,responseMessage);
         } catch( IOException e){
             e.printStackTrace();

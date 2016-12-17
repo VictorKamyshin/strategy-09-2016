@@ -83,7 +83,6 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
             final List<Result> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
             if(result==null){
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId));
-                // то отправить одно сообщение //testMessage.setMyMessage("Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки");
             } else {
                 ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
@@ -118,10 +117,8 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         if(usersToGamesMap.containsKey(playerId)){
             if(usersToGamesMap.get(playerId).moveShip(direction, playerId)){ //Сообщение для игровой механики
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress,"корабль передвинулся, но мы этого пока не увидим",playerId));
-                //testMessage.setMyMessage("корабль передвинулся, но мы этого пока не увидим");
             } else {
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Капитан, корабль не может туда плыть.",playerId));
-                //testMessage.setMyMessage("Капитан, корабль не может туда плыть. Сейчас его координаты: ");
             }
         } else {
             ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Этот игрок вообще не участвует в играх",playerId));

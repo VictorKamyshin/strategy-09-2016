@@ -19,11 +19,14 @@ import java.io.IOException;
 public class GameSocketHandler extends TextWebSocketHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSocketHandler.class);
 
-    private final @NotNull MessageHandlerContainer messageHandlerContainer;
+    @NotNull
+    private final MessageHandlerContainer messageHandlerContainer;
 
-    private final @NotNull AccountService accountService;
+    @NotNull
+    private final AccountService accountService;
 
-    private final @NotNull RemotePointService remotePointService;
+    @NotNull
+    private final RemotePointService remotePointService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,13 +43,12 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException {
         final Long userId = (Long) webSocketSession.getAttributes().get("userId");
         if(userId==null){
-            final MessageToClient.Request testMessage = new MessageToClient.Request();
-            testMessage.setMyMessage("Cookie files is missing =(");
+            final MessageToClient.Request infoMessage = new MessageToClient.Request();
+            infoMessage.setMyMessage("Cookie files is missing =(");
             try {
                 final Message responseMessage = new Message(MessageToClient.Request.class.getName(),
-                        objectMapper.writeValueAsString(testMessage));
+                        objectMapper.writeValueAsString(infoMessage));
                 webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(responseMessage)));
-                return;
             } catch( Exception e){
                 e.printStackTrace();
             }
