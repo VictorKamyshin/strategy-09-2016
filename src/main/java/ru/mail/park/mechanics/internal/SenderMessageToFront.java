@@ -45,7 +45,7 @@ public class SenderMessageToFront implements  Runnable, Abonent{
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    public SenderMessageToFront(MessageSystem ms, RemotePointService remotePointService) {
+    public SenderMessageToFront(MessageSystem ms, @NotNull RemotePointService remotePointService) {
         this.ms = ms;
         ms.addAbonent(myAddress);
         this.remotePointService = remotePointService;

@@ -25,9 +25,9 @@ public class MessageSystem {
     }
 
     public void execForAbonent(Abonent abonent) { //приходит такой аббенент, а у него целый ящик спама и начинает он его, значит, разгребать
-        Queue<Message> messageQueue = messages.get(abonent.getAddress());
+        final Queue<Message> messageQueue = messages.get(abonent.getAddress());
         while(!messageQueue.isEmpty()){
-            Message message = messageQueue.poll();
+            final Message message = messageQueue.poll();
             message.exec(abonent);
         }
     }
