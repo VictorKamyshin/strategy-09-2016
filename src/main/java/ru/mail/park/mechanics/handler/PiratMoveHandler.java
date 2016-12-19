@@ -33,6 +33,7 @@ public class PiratMoveHandler extends MessageHandler<PiratMoveRequest> {
     @Override
     public void handle(@NotNull PiratMoveRequest message, @NotNull Long forUser) throws HandleException {
         //пришел запрос на передвижение пирата
+        System.out.println("К нам пришло сообщение о передвижении пирата с номером " + message.getPiratId());
         gameProgressService.movePirat(message.getPiratId(),
                 new CoordPair(message.getTargetCellX(), message.getTargetCellY()), forUser);
     }

@@ -129,10 +129,12 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         requestToSecondPlayer.setActive(false);
         //noinspection OverlyBroadCatchBlock
         try {
+            System.out.println("Send start message to first player");
             final Message messageToFirst = new Message(BoardMapForUsers.Request.class.getName(),
                     objectMapper.writeValueAsString(requestToFirstPlayer));
             remotePointService.sendMessageToUser(firstPLayer.getId(), messageToFirst);
 
+            System.out.println("Send start message to second player");
             final Message messageToSecond = new Message(BoardMapForUsers.Request.class.getName(),
                     objectMapper.writeValueAsString(requestToSecondPlayer));
             remotePointService.sendMessageToUser(secondPlayer.getId(), messageToSecond);

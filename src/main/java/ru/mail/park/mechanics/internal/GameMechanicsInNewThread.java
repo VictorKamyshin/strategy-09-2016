@@ -72,6 +72,7 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         usersToGamesMap.put(secondPlayer.getId(), game); // создали игру, запомнили ее связь с пользователями
         userToUserMap.put(firstPlayer.getId(),secondPlayer.getId());
         userToUserMap.put(secondPlayer.getId(), firstPlayer.getId());
+        System.out.println("Created gameBoard");
         ms.sendMessage(new InitGameMessageToFront(myAddress,senderAddress,game.getMap(),firstPlayer,secondPlayer));
     }
 
@@ -109,10 +110,10 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
 
     }
 
-    public void moveShip(CoordPair direction, Long playerId){
+    public void moveShip(CoordPair targetCell, Long playerId){
 
         if(usersToGamesMap.containsKey(playerId)){
-            final List<Result> shipMovementResults = usersToGamesMap.get(playerId).moveShip(direction, playerId);
+            final List<Result> shipMovementResults = usersToGamesMap.get(playerId).moveShip(targetCell, playerId);
             if(shipMovementResults!=null){ //Сообщение для игровой механики
                 ms.sendMessage(new ShipMoveToSender(myAddress,senderAddress,playerId, userToUserMap.get(playerId),shipMovementResults));
                 //ms.sendMessage(new InfoMessage(myAddress, senderAddress,"корабль передвинулся, но мы этого пока не увидим",playerId));

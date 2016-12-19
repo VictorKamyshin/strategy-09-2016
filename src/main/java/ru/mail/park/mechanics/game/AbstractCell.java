@@ -78,11 +78,6 @@ public abstract class AbstractCell {
         }
     }
 
-
-    public CoordPair getCord() {
-        return cord;
-    }
-
     public Boolean moveIn(Integer newPiratId, List<Result> results, List<Integer> deadPirats){
         results.add(new MovementResult(newPiratId / 3, newPiratId % 3,this.cord));
         deadPirats.addAll(killEnemy(newPiratId));
@@ -99,6 +94,10 @@ public abstract class AbstractCell {
         }
         results.add(new MovementResult(-1));
         return false;
+    }
+
+    public CoordPair getCord() {
+        return cord;
     }
 
     public Boolean getUnderShip() {

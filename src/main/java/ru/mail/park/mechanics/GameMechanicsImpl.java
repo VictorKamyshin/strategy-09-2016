@@ -54,10 +54,12 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public void tryStartGame(){
         LOGGER.debug("Try to start game");
+        System.out.println("try to start game");
         final Set<UserProfile> matchedPlayers = new LinkedHashSet<>();
         while(waiters.size()>=1){ //пока в списке желающих сыграть больше 1 человека
             final Long candidateId = waiters.poll(); //достаем желающего из очереди
             LOGGER.debug("Is it possible to start game?");
+            System.out.println("Is is possible to start game?");
             if (!insureCandidate(candidateId)) { //если он еще может игрыть
                 continue;
             }
@@ -65,6 +67,7 @@ public class GameMechanicsImpl implements GameMechanics {
             if(matchedPlayers.size() == 2) { //если таких набралось двое, то у них начинается игра
                 final Iterator<UserProfile> iterator = matchedPlayers.iterator();
                 LOGGER.debug("We have to people, who want to play.");
+                System.out.println("We have to people, who want to play");
                 gameProgressService.initGameFor(iterator.next(), iterator.next());
                 matchedPlayers.clear();
             }

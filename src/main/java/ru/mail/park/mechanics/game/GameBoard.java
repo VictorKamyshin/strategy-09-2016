@@ -87,8 +87,8 @@ public class GameBoard {
         return players[playerId].getShipCord();
     }
 
-    public List<Result> moveShip(CoordPair direction, Integer playerId){
-        return players[playerId].moveShip(direction);
+    public List<Result> moveShip(CoordPair targetCell, Integer playerId){
+        return players[playerId].moveShip(targetCell);
     }
 
     public List<Result> movePirat(Movement move, Integer playerId){
@@ -154,7 +154,7 @@ public class GameBoard {
         private GamePlayer(Integer playerId){
             this.playerId = playerId;
             for(Integer i = 0; i < 3; ++i){
-                generatePirat(i + 3 * playerId, playerId);
+                generatePirat(i + 3 * playerId);
             }
             if(playerId.equals(0)){
                 setShip(0,new CoordPair(0,6), new CoordPair(0,1));
@@ -184,7 +184,7 @@ public class GameBoard {
             boardMap[location.getX()][location.getY()].setUnderShip(true);
         }
 
-        private void generatePirat(Integer piratId, Integer playerId){
+        private void generatePirat(Integer piratId){
             if(playerId.equals(0)){
                 pirats[piratId - 3 * playerId] = new Pirat(piratId, new CoordPair(0, 6)); //переделать
                 boardMap[0][6].setPiratId(piratId);
@@ -198,23 +198,26 @@ public class GameBoard {
             return pirats[piratId -3 * playerId].getLocation(); //сделать поправку на то, что айдишники должны быть уникальны
         }
 
-        private List<Result> moveShip(CoordPair direction){
+        private List<Result> moveShip(CoordPair targetCell){
             for(CoordPair tempPair:ship.getAvaliableDirection()){
-                if(CoordPair.equals(tempPair,direction)){ // такое направление вообще возможно
+                //сами себе придумали проблему
+                if(targetCell.equals(CoordPair.sum(tempPair,ship.getLocation()))){ // такое направление вообще возможно
                     if(boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds().length>0) { //на корабле есть хоть кто-то
+                        final CoordPair direction = new CoordPair(targetCell.getX() - ship.getLocation().getX(), targetCell.getY() - ship.getLocation().getY() );
                         if (boardMap[CoordPair.sum(ship.neighbors[0], direction).getX()]
                                 [CoordPair.sum(ship.neighbors[0], direction).getY()].getId() < NUMBEFOFCELL) { //и с этого корабля потом можно будет сойти на остров
+
                             final List<Result> results = new ArrayList<>();
                             for (Integer piratId : boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds()) { //айди всех пиратов на корабле
 
-                                results.add(new MovementResult(piratId/3, piratId % 3 , CoordPair.sum(ship.getLocation(), direction)));
+                                results.add(new MovementResult(piratId/3, piratId % 3 , targetCell));
 
-                                pirats[piratId - 3 * playerId].setLocation(CoordPair.sum(ship.getLocation(), direction));
-                                boardMap[CoordPair.sum(ship.getLocation(), direction).getX()]
-                                        [CoordPair.sum(ship.getLocation(), direction).getY()].setPiratId(piratId - 3 * playerId);
+                                pirats[piratId - 3 * playerId].setLocation(targetCell);
+                                boardMap[targetCell.getX()]
+                                        [targetCell.getY()].setPiratId(piratId - 3 * playerId);
                             }
                             boardMap[ship.getLocation().getX()][ship.getLocation().getY()].setUnderShip(false);
-                            ship.setLocation(direction);
+                            ship.setLocation(targetCell);
 
                             boardMap[ship.getLocation().getX()][ship.getLocation().getY()].setUnderShip(true);
                             ship.resetNeighbors();

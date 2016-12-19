@@ -58,9 +58,9 @@ public class GameContent { //класс, управляющий одной от�
     }
 
     @Nullable
-    public List<Result> moveShip(CoordPair direction, Long playerId){
+    public List<Result> moveShip(CoordPair targetCell, Long playerId){
         final Integer playerGameId = gameUserIdToGameUserId(playerId);
-        final List<Result> shipMove = board.moveShip(direction, playerGameId);
+        final List<Result> shipMove = board.moveShip(targetCell, playerGameId);
         if(shipMove!=null) {
             ++countOfTurns;
             changeActivePlayer();
@@ -74,6 +74,7 @@ public class GameContent { //класс, управляющий одной от�
             return null;
         }
         final Integer playerGameId = gameUserIdToGameUserId(playerId);
+        System.out.println(piratId + " " + playerId);
         final Integer piratIngameId = piratId + 3 * playerGameId;
         move = new Movement(piratIngameId, getPiratCord(piratIngameId, playerGameId), targetCell);
         final List<Result> result = board.movePirat(move, playerGameId); //отдавать один индекс вместо двух

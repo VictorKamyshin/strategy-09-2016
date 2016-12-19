@@ -10,19 +10,19 @@ import ru.mail.park.messageSystem.Address;
  */
 public class MoveShipMessage extends MessageToGameMechanics {
     @NotNull
-    private CoordPair direction;
+    private CoordPair targetCell;
 
     @NotNull
     private Long playerId;
 
-    public MoveShipMessage(Address from, Address to, @NotNull CoordPair direction, @NotNull Long playerId) {
+    public MoveShipMessage(Address from, Address to, @NotNull CoordPair targetCell, @NotNull Long playerId) {
         super(from, to);
-        this.direction = direction;
+        this.targetCell = targetCell;
         this.playerId = playerId;
     }
 
     @Override
     public void exec(GameMechanicsInNewThread gameMechanicsInNewThread){
-        gameMechanicsInNewThread.moveShip(direction, playerId);
+        gameMechanicsInNewThread.moveShip(targetCell, playerId);
     }
 }

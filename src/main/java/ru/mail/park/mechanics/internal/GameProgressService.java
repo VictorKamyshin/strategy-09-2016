@@ -38,8 +38,8 @@ public class GameProgressService {
 
     }
 
-    public void moveShip(CoordPair direction, Long playerId){
-        ms.sendMessage(new MoveShipMessage(myAddress, gameMechanincsAddress,direction,playerId));
+    public void moveShip(CoordPair targetCell, Long playerId){
+        ms.sendMessage(new MoveShipMessage(myAddress, gameMechanincsAddress,targetCell,playerId));
 
     }
 
