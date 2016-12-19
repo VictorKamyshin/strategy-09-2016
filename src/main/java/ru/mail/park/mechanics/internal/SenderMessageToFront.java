@@ -89,6 +89,8 @@ public class SenderMessageToFront implements  Runnable, Abonent{
     }
 
     public void sendShipMove(List<Result> results, Long activePlayerId, Long passivePlayerId){
+        System.out.println("Готовимся отсылать движение корабля");
+        System.out.println("Нулл?? "+(results!=null));
         final ShipMoveMessage.Request shipMoveMessage = new ShipMoveMessage.Request();
         shipMoveMessage.setMovements(new Gson().toJson(results));
         shipMoveMessage.setActive(false);

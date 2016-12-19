@@ -112,7 +112,7 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     }
 
     public void moveShip(CoordPair targetCell, Long playerId){
-
+        System.out.println("Готовимся двигать корабль");
         if(usersToGamesMap.containsKey(playerId)){
             final List<Result> shipMovementResults = usersToGamesMap.get(playerId).moveShip(targetCell, playerId);
             if(shipMovementResults!=null){ //Сообщение для игровой механики

@@ -11,7 +11,7 @@ public class ShipMovementResult extends Result {
 
     private Integer targetCellIndex;
 
-    public ShipMovementResult(Integer playerId, Integer piratId, CoordPair targetCell){
+    public ShipMovementResult(Integer playerId, CoordPair targetCell){
         super(0,playerId);
         this.targetCellIndex = GameBoard.BOARDWIGHT * targetCell.getY() + targetCell.getX();
     }

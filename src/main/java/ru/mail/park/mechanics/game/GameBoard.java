@@ -1,10 +1,7 @@
 package ru.mail.park.mechanics.game;
 
 import org.jetbrains.annotations.Nullable;
-import ru.mail.park.mechanics.utils.results.DropCoinResult;
-import ru.mail.park.mechanics.utils.results.MovementResult;
-import ru.mail.park.mechanics.utils.results.PickCoinResult;
-import ru.mail.park.mechanics.utils.results.Result;
+import ru.mail.park.mechanics.utils.results.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -223,9 +220,10 @@ public class GameBoard {
                                 [CoordPair.sum(ship.neighbors[0], direction).getY()].getId() < NUMBEFOFCELL) { //и с этого корабля потом можно будет сойти на остров
 
                             final List<Result> results = new ArrayList<>();
+                            results.add(new ShipMovementResult(playerId,targetCell));
                             for (Integer piratId : boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds()) { //айди всех пиратов на корабле
 
-                                results.add(new MovementResult(piratId/3, piratId % 3 , targetCell));
+                                //results.add(new MovementResult(piratId/3, piratId % 3 , targetCell));
 
                                 pirats[piratId - 3 * playerId].setLocation(targetCell);
                                 boardMap[targetCell.getX()]

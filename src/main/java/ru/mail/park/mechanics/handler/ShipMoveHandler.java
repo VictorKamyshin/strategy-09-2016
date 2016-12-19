@@ -33,6 +33,7 @@ public class ShipMoveHandler extends MessageHandler<ShipMoveRequest> { //дви�
     @Override
     public void handle(@NotNull ShipMoveRequest message, @NotNull Long forUser) throws HandleException {
         //тут тоже надо пнуть прогресс-гейм-сервис, чтобы передвинул корабль и отослал игрокам новое поле
+        System.out.println("К нам пришел запрос на передвижение корабля");
         gameProgressService.moveShip(new CoordPair(message.getTargetCellX(), message.getTargetCellY()), forUser);
 
     }
