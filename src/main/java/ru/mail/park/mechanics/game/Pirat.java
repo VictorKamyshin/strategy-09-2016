@@ -25,4 +25,11 @@ public class Pirat {
         return id;
     }
 
+    public Boolean getHaveCoin() {
+        return haveCoin;
+    }
+
+    public void setHaveCoin(Boolean haveCoin) {
+        this.haveCoin = haveCoin;
+    }
 }

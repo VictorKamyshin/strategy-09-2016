@@ -126,6 +126,18 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         }
     }
 
+    public void coinAction(Integer piratId, Boolean pickCoin, Boolean dropCoin, Long firstPlayerId){
+        if(pickCoin && dropCoin){
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId));
+        } else if( !pickCoin && !dropCoin){
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId));
+        } else {
+            final List<Result> coinAction = usersToGamesMap.get(firstPlayerId).coinAction(pickCoin, dropCoin, piratId, firstPlayerId);
+            ms.sendMessage(new CoinActionMessageToSender(myAddress, senderAddress,coinAction, firstPlayerId,userToUserMap.get(firstPlayerId)));
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Норм сообщение о монетке, но пока не могу его отрисовать", firstPlayerId));
+        }
+    }
+
     @Override
     public Address getAddress(){
         return this.myAddress;

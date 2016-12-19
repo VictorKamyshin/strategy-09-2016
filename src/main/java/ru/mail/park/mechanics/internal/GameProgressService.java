@@ -29,6 +29,10 @@ public class GameProgressService {
         this.ms = ms;
     }
 
+    public void coinAction(Integer piratId, Boolean pickCoin, Boolean dropCoin, Long playerId){
+        ms.sendMessage(null);
+    }
+
     public void movePirat(Integer piratId, CoordPair targetCell, Long playerId){
         ms.sendMessage(new MovePiratMessage(myAddress, gameMechanincsAddress, piratId, targetCell, playerId));
     }

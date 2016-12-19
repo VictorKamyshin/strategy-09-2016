@@ -1,6 +1,9 @@
 package ru.mail.park.mechanics.game;
 
+import org.jetbrains.annotations.Nullable;
+import ru.mail.park.mechanics.utils.results.DropCoinResult;
 import ru.mail.park.mechanics.utils.results.MovementResult;
+import ru.mail.park.mechanics.utils.results.PickCoinResult;
 import ru.mail.park.mechanics.utils.results.Result;
 
 import java.util.ArrayList;
@@ -87,8 +90,20 @@ public class GameBoard {
         return players[playerId].getShipCord();
     }
 
+    @Nullable
     public List<Result> moveShip(CoordPair targetCell, Integer playerId){
         return players[playerId].moveShip(targetCell);
+    }
+
+    @Nullable
+    public List<Result> coinAction(Boolean pickCoin, Boolean dropCoin, Integer piratId, Integer playerId){
+        if(pickCoin) {
+            return players[playerId].pickCoin(piratId);
+        } else if(dropCoin) {
+            return players[playerId].dropCoin(piratId);
+        } else {
+            return null;
+        }
     }
 
     public List<Result> movePirat(Movement move, Integer playerId){
@@ -264,6 +279,37 @@ public class GameBoard {
             } //мы не можем провести мертвого пирата через стандартный обработчик движения
 
             return results;
+        }
+
+        @Nullable
+        private List<Result> pickCoin(Integer piratId){
+            final List<Result> coinActionResult = new ArrayList<>();
+            if(pirats[piratId % 3].getHaveCoin()){
+                coinActionResult.add(new PickCoinResult(-1));
+            } else {
+                final CoordPair piratLocation = pirats[piratId % 3].getLocation();
+                if(boardMap[piratLocation.getX()][piratLocation.getY()].getCoin()){
+                    pirats[piratId%3].setHaveCoin(true);
+                    coinActionResult.add(new PickCoinResult(0,playerId,piratId));
+                } else {
+                    coinActionResult.add(new PickCoinResult(-2));
+                }
+            }
+            return  coinActionResult;
+        }
+
+        @Nullable
+        private List<Result> dropCoin(Integer piratId){
+            final List<Result> coinActionResult = new ArrayList<>();
+            if(!pirats[piratId % 3].getHaveCoin()){
+                coinActionResult.add(new DropCoinResult(-1)); //у пирата не было монетки
+            } else {
+                final CoordPair piratLocation = pirats[piratId % 3].getLocation();
+                pirats[piratId%3].setHaveCoin(false);
+                boardMap[piratLocation.getX()][piratLocation.getY()].addCoin();
+                coinActionResult.add(new PickCoinResult(0,playerId,piratId));
+            }
+            return  coinActionResult;
         }
 
         private Boolean isCellPlacedNearPirat(Integer piratId, CoordPair targetCell){

@@ -14,9 +14,11 @@ import javax.annotation.PostConstruct;
 @Component
 public class PiratMoveHandler extends MessageHandler<PiratMoveRequest> {
 
-    private @NotNull GameProgressService gameProgressService;
+    @NotNull
+    private GameProgressService gameProgressService;
 
-    private @NotNull MessageHandlerContainer messageHandlerContainer;
+    @NotNull
+    private  MessageHandlerContainer messageHandlerContainer;
 
     public PiratMoveHandler(@NotNull GameProgressService gameProgressService,
                             @NotNull MessageHandlerContainer messageHandlerContainer) {

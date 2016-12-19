@@ -115,4 +115,17 @@ public abstract class AbstractCell {
     public String getView(){
         return "";
     }
+
+    public Boolean getCoin(){
+        if(countOfCoins>0){
+            countOfCoins--;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void addCoin(){
+        countOfCoins++;
+    }
 }

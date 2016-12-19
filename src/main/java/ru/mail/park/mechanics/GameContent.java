@@ -58,6 +58,12 @@ public class GameContent { //класс, управляющий одной от�
     }
 
     @Nullable
+    public List<Result> coinAction(Boolean pickCoin, Boolean dropCoin, Integer piratId, Long playerId){
+        final Integer playerGameId = gameUserIdToGameUserId(playerId);
+        return board.coinAction(pickCoin, dropCoin,piratId, playerGameId);
+    }
+
+    @Nullable
     public List<Result> moveShip(CoordPair targetCell, Long playerId){
         final Integer playerGameId = gameUserIdToGameUserId(playerId);
         final List<Result> shipMove = board.moveShip(targetCell, playerGameId);
@@ -106,8 +112,7 @@ public class GameContent { //класс, управляющий одной от�
     } // задел на будущее, когда появятся стрелки
 
     public List<Integer> getMap(){
-        List<Integer> tempList = board.getBoardMap();
-        return tempList;
+        return board.getBoardMap();
     }
 
     public Integer getCountOfTurns() {

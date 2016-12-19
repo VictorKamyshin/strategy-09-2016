@@ -5,10 +5,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mail.park.mechanics.requests.toUsers.BoardMapForUsers;
-import ru.mail.park.mechanics.requests.toUsers.NeighborsMessage;
-import ru.mail.park.mechanics.requests.toUsers.PiratMoveMessage;
-import ru.mail.park.mechanics.requests.toUsers.ReplyPingMessage;
+import ru.mail.park.mechanics.requests.toUsers.*;
 import ru.mail.park.mechanics.utils.results.MovementResult;
 import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
@@ -91,6 +88,40 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
+    public void sendShipMove(List<Result> results, Long activePlayerId, Long passivePlayerId){
+        final ShipMoveMessage.Request shipMoveMessage = new ShipMoveMessage.Request();
+        shipMoveMessage.setMovements(new Gson().toJson(results));
+        shipMoveMessage.setActive(false);
+        try {
+            final Message responseMessageToActivePLayer = new Message(ShipMoveMessage.Request.class.getName(),
+                    objectMapper.writeValueAsString(shipMoveMessage));
+            remotePointService.sendMessageToUser(activePlayerId,responseMessageToActivePLayer);
+        } catch( IOException e){
+            e.printStackTrace();
+        }
+        try {
+            shipMoveMessage.setActive(true);
+            final Message responseMessageToPassivePlayer = new Message(ShipMoveMessage.Request.class.getName(),
+                    objectMapper.writeValueAsString(shipMoveMessage));
+            remotePointService.sendMessageToUser(passivePlayerId, responseMessageToPassivePlayer);//надо переделать sessionService, чтобы не было таких цепочек
+        } catch( IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCoinAction(List<Result> results, Long activePlayerId, Long passivePlayerId){
+        final CoinActionMessage.Request coinActionMessage = new CoinActionMessage.Request();
+        coinActionMessage.setMovement(new Gson().toJson(results));
+        try {
+            final Message responseMessage = new Message(CoinActionMessage.Request.class.getName(),
+                    objectMapper.writeValueAsString(coinActionMessage));
+            remotePointService.sendMessageToUser(activePlayerId,responseMessage);
+            remotePointService.sendMessageToUser(passivePlayerId,responseMessage);
+        } catch( IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void piratMove(List<Result> movementResults, Long activePlayerId, Long passivePlayerId){
         final PiratMoveMessage.Request newTurnMessage = new PiratMoveMessage.Request();
         newTurnMessage.setActive(false);
@@ -153,10 +184,6 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         } catch( Exception e){
             e.printStackTrace();
         }
-    }
-
-    public void sendShipMove(List<Result> results, Long activePLayerId, Long passivePlayerId){
-
     }
 
 

@@ -5,25 +5,16 @@ package ru.mail.park.mechanics.requests.toUsers;
  */
 public class ShipMoveMessage {
     public static final class Request {
-        private Integer playerId;
-        private Integer targetCellIndex;
+        private Boolean isActive;
 
         private String movements;
 
-        public Integer getPlayerId() {
-            return playerId;
+        public Boolean getActive() {
+            return isActive;
         }
 
-        public void setPlayerId(Integer playerId) {
-            this.playerId = playerId;
-        }
-
-        public Integer getTargetCellIndex() {
-            return targetCellIndex;
-        }
-
-        public void setTargetCellIndex(Integer targetCellIndex) {
-            this.targetCellIndex = targetCellIndex;
+        public void setActive(Boolean active) {
+            isActive = active;
         }
 
         public String getMovements() {
