@@ -133,8 +133,20 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
             ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId));
         } else {
             final List<Result> coinAction = usersToGamesMap.get(firstPlayerId).coinAction(pickCoin, dropCoin, piratId, firstPlayerId);
+            try{
+            if(coinAction.get(0).getStatus()==-1){
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"У пирата уже есть монетка или ему нечего выбрасывать", firstPlayerId));
+            }
+            if(coinAction.get(0).getStatus()==-2){
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"В локации не было монетки", firstPlayerId));
+            }
+            if( coinAction.get(0).getStatus()==0){
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Норм сообщение о монетке, но пока не могу его отрисовать", firstPlayerId));
+            }
+            } catch(NullPointerException e){
+                System.out.println("Кто-то подсунул нам нулевой список, что за фигня");
+            }
             ms.sendMessage(new CoinActionMessageToSender(myAddress, senderAddress,coinAction, firstPlayerId,userToUserMap.get(firstPlayerId)));
-            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Норм сообщение о монетке, но пока не могу его отрисовать", firstPlayerId));
         }
     }
 
