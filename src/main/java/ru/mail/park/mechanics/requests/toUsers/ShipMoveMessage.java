@@ -1,4 +1,4 @@
-package ru.mail.park.mechanics.requests;
+package ru.mail.park.mechanics.requests.toUsers;
 
 /**
  * Created by victor on 04.12.16.

@@ -1,4 +1,4 @@
-package ru.mail.park.mechanics.requests;
+package ru.mail.park.mechanics.requests.toUsers;
 
 public class ReplyPingMessage { //ответ на пинг от юзера
     public static final class Request {

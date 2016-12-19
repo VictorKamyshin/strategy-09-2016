@@ -1,4 +1,4 @@
-package ru.mail.park.mechanics.requests;
+package ru.mail.park.mechanics.requests.toUsers;
 
 import java.util.List;
 

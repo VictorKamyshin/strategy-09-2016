@@ -3,7 +3,7 @@ package ru.mail.park.mechanics.handler;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mail.park.exeption.HandleException;
-import ru.mail.park.mechanics.requests.GetPingMessage;
+import ru.mail.park.mechanics.requests.fromUsers.GetPingMessage;
 import ru.mail.park.mechanics.internal.PingService;
 import ru.mail.park.websocket.MessageHandler;
 import ru.mail.park.websocket.MessageHandlerContainer;

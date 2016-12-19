@@ -1,4 +1,4 @@
-package ru.mail.park.mechanics.requests;
+package ru.mail.park.mechanics.requests.toUsers;
 
 public class PiratMoveMessage { //сообщение для пользователя о том, что какой-то пират был передвинут
     public static final class Request {

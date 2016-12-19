@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.mail.park.exeption.HandleException;
 import ru.mail.park.mechanics.game.CoordPair;
 import ru.mail.park.mechanics.internal.GameProgressService;
-import ru.mail.park.mechanics.requests.PiratMoveRequest;
+import ru.mail.park.mechanics.requests.fromUsers.PiratMoveRequest;
 import ru.mail.park.websocket.MessageHandler;
 import ru.mail.park.websocket.MessageHandlerContainer;
 

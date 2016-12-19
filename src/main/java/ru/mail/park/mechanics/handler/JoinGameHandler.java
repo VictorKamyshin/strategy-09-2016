@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mail.park.exeption.HandleException;
 import ru.mail.park.mechanics.GameMechanics;
-import ru.mail.park.mechanics.requests.JoinGame;
+import ru.mail.park.mechanics.requests.fromUsers.JoinGame;
 import ru.mail.park.websocket.MessageHandler;
 import ru.mail.park.websocket.MessageHandlerContainer;
 

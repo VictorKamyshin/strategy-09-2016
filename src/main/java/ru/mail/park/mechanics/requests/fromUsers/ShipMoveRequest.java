@@ -1,4 +1,4 @@
-package ru.mail.park.mechanics.requests;
+package ru.mail.park.mechanics.requests.fromUsers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

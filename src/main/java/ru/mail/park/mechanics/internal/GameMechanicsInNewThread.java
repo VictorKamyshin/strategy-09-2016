@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mail.park.mechanics.GameContent;
 import ru.mail.park.mechanics.game.CoordPair;
+import ru.mail.park.mechanics.game.GameBoard;
 import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
 import ru.mail.park.messageSystem.Address;
@@ -59,7 +60,7 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         while (true) {
             try { //Все остальные методы вызываются при выполнении сообщений в этом цикле
                 ms.execForAbonent(this);
-                Thread.sleep(STEP_TIME);
+                Thread.sleep(STEP_TIME);//сделать так, чтобы таски выполнялись через равные промежутки времени
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -89,20 +90,20 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
 
     public void getNeighbor(Integer cellIndex, Long playerId){
 
-        final Integer x = cellIndex%13;
-        final Integer y = cellIndex/13;
+        final Integer x = cellIndex % GameBoard.BOARDWIGHT;
+        final Integer y = cellIndex / GameBoard.BOARDWIGHT;
         final CoordPair piratCord = new CoordPair(x,y);
         final CoordPair[] neighbors = usersToGamesMap.get(playerId).getNeighbors(piratCord, playerId); //Сообщение для игровой механики
 
         final List<Integer> neighborsList = new ArrayList<>();
         for(CoordPair cell:neighbors){
-            neighborsList.add(13*cell.getY()+cell.getX());
+            neighborsList.add(GameBoard.BOARDWIGHT*cell.getY()+cell.getX());
         }
 
         if(CoordPair.equals(piratCord,usersToGamesMap.get(playerId).getShipCord(playerId))){
             final CoordPair[] shipNeighbors = usersToGamesMap.get(playerId).getShipAvailableDirection(playerId); //Сообщение для игровой механики
             for(CoordPair cell:shipNeighbors){
-                neighborsList.add(13*(cell.getY()+piratCord.getY())+(cell.getX()+piratCord.getX()));
+                neighborsList.add(GameBoard.BOARDWIGHT*(cell.getY()+piratCord.getY())+(cell.getX()+piratCord.getX()));
             }
         }
 
