@@ -8,14 +8,12 @@ import ru.mail.park.mechanics.game.GameBoard;
  */
 public class MovementResult extends  Result {
 
-    private final ResultType type = Result.ResultType.PiratMove;
-
     private Integer piratId;
 
     private Integer targetCellIndex;
 
     public MovementResult(Integer playerId, Integer piratId, CoordPair targetCell){
-        super(0,playerId);
+        super(0,playerId, ResultType.PiratMove);
         this.piratId = piratId;
         this.targetCellIndex = GameBoard.BOARDWIGHT * targetCell.getY() + targetCell.getX();
     }

@@ -7,12 +7,12 @@ import ru.mail.park.mechanics.game.GameBoard;
  * Created by victor on 17.12.16.
  */
 public class ShipMovementResult extends Result {
-    private final ResultType type = ResultType.ShipMove;
+
 
     private Integer targetCellIndex;
 
     public ShipMovementResult(Integer playerId, CoordPair targetCell){
-        super(0,playerId);
+        super(0,playerId, ResultType.ShipMove);
         this.targetCellIndex = GameBoard.BOARDWIGHT * targetCell.getY() + targetCell.getX();
     }
 

@@ -19,7 +19,10 @@ public class GameBoard {
 
     public GameBoard() {
         final Vector<AbstractCell> cellIdPool = new Vector<>();
-        for(int i = 0; i < NUMBEFOFCELL; ++i) {
+        for(int i = 0; i < 15; ++i) {
+            cellIdPool.add(new ChestCell(i, this));
+        }
+        for(int i = 15; i < NUMBEFOFCELL; ++i) {
             cellIdPool.add(new BoardCell(i, this));
         }
         Collections.shuffle(cellIdPool);
@@ -104,6 +107,17 @@ public class GameBoard {
     }
 
     public List<Result> movePirat(Movement move, Integer playerId){
+        if(players[0].getPlayersCoins() + players[1].getPlayersCoins() == 15) {
+            if(players[0].getPlayersCoins() > players[1].getPlayersCoins()){
+                final ArrayList<Result> tmpList = new ArrayList<>();
+                tmpList.add(new GameOverResult(0, playerId,0));
+                return tmpList;
+            } else {
+                final ArrayList<Result> tmpList = new ArrayList<>();
+                tmpList.add(new GameOverResult(0, playerId,1));
+                return tmpList;
+            }
+        }
         return players[playerId].move(move);
     }
 
@@ -127,6 +141,7 @@ public class GameBoard {
 
     public CoordPair[] getCellNeighbors(CoordPair cellCord, Integer playerId){
         if(boardMap[cellCord.getX()][cellCord.getY()].isUnderShip){
+
             return players[playerId].ship.getNeighbors();
         } else {
             return boardMap[cellCord.getX()][cellCord.getY()].getNeighbors();
@@ -162,8 +177,10 @@ public class GameBoard {
         private Pirat[] pirats = new Pirat[3];
         private Ship ship;
         private Integer playerId;
+        private Integer playersCoins;
 
         private GamePlayer(Integer playerId){
+            playersCoins = 0;
             this.playerId = playerId;
             for(Integer i = 0; i < 3; ++i){
                 generatePirat(i + 3 * playerId);
@@ -224,10 +241,10 @@ public class GameBoard {
                             for (Integer piratId : boardMap[ship.getLocation().getX()][ship.getLocation().getY()].getPiratIds()) { //айди всех пиратов на корабле
 
                                 //results.add(new MovementResult(piratId/3, piratId % 3 , targetCell));
-
+                                //final Integer piratIngameId = piratId + 3 * playerGameId;
                                 pirats[piratId - 3 * playerId].setLocation(targetCell);
                                 boardMap[targetCell.getX()]
-                                        [targetCell.getY()].setPiratId(piratId - 3 * playerId);
+                                        [targetCell.getY()].setPiratId(piratId);
                             }
                             boardMap[ship.getLocation().getX()][ship.getLocation().getY()].setUnderShip(false);
                             ship.setLocation(targetCell);
@@ -263,7 +280,7 @@ public class GameBoard {
 
             pirats[piratMove.getPiratId() - 3 * playerId].setLocation(piratMove.getTargetCell());
 
-            List<Integer> deadPirats = new ArrayList<>();
+            final List<Integer> deadPirats = new ArrayList<>();
             if(!boardMap[targetX][targetY].moveIn(piratId, results, deadPirats)){
                 return  results;
             }
@@ -272,9 +289,29 @@ public class GameBoard {
                 final Integer piratOwner = deadPiratId / 3;
                 final CoordPair shipCord = players[piratOwner].getShipCord();
                 boardMap[shipCord.getX()][shipCord.getY()].setPiratId(deadPiratId);
+                if(players[piratOwner].pirats[deadPiratId - 3 * piratOwner].getHaveCoin()){
+                    results.add(new DropCoinResult(deadPiratId));
+                    players[piratOwner].pirats[deadPiratId-3*piratOwner].setHaveCoin(false);
+                    boardMap[targetX][targetY].addCoin();
+                }
+                if(!this.pirats[piratId].getHaveCoin()){
+                    if (boardMap[targetX][targetY].getCoin()) {
+                        results.add(new PickCoinResult(0, this.playerId,piratId));
+                        this.pirats[piratId].setHaveCoin(true);
+                    }
+                } else {
+                    boardMap[targetX][targetY].addCoin();
+                }
                 players[piratOwner].pirats[deadPiratId-3*piratOwner].setLocation(shipCord);
                 results.add(new MovementResult(piratOwner,deadPiratId-3*piratOwner,shipCord));
             } //мы не можем провести мертвого пирата через стандартный обработчик движения
+
+            if(boardMap[targetX][targetY].getCord().equals(this.getShipCord())){
+                this.pirats[piratId].setHaveCoin(false);
+                this.playersCoins++;
+            }
+
+
 
             return results;
         }
@@ -332,6 +369,10 @@ public class GameBoard {
                     return pirat.getId();
                 }
             return null;
+        }
+
+        public Integer getPlayersCoins() {
+            return playersCoins;
         }
     }
 }

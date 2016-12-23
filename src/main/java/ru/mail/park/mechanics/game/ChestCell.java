@@ -7,5 +7,6 @@ public class ChestCell extends BoardCell{ //клетка с сундуком с 
 
     public ChestCell(Integer id, GameBoard gameBoard){
         super(id,gameBoard);
+        countOfCoins = 1;
     }
 }

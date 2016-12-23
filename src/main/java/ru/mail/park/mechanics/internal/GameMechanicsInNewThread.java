@@ -80,8 +80,11 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     public void movePirat(Integer piratId, CoordPair targetCell, Long firstPlayerId) {
         if (usersToGamesMap.containsKey(firstPlayerId)) {
             final List<Result> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
+            if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>4){
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Game Over", firstPlayerId, userToUserMap.get(firstPlayerId)));
+            }
             if(result==null){
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId));
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId, userToUserMap.get(firstPlayerId)));
             } else {
                 ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
@@ -103,7 +106,10 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
         if(CoordPair.equals(piratCord,usersToGamesMap.get(playerId).getShipCord(playerId))){
             final CoordPair[] shipNeighbors = usersToGamesMap.get(playerId).getShipAvailableDirection(playerId); //Сообщение для игровой механики
             for(CoordPair cell:shipNeighbors){
-                neighborsList.add(GameBoard.BOARDWIGHT*(cell.getY()+piratCord.getY())+(cell.getX()+piratCord.getX()));
+                final CoordPair tempPair = new CoordPair((cell.getY()+piratCord.getY()),(cell.getX()+piratCord.getX()));
+                if(tempPair.getX()>1&&tempPair.getX()<11) {
+                    neighborsList.add(GameBoard.BOARDWIGHT * (cell.getY() + piratCord.getY()) + (cell.getX() + piratCord.getX()));
+                }
             }
         }
 
@@ -119,29 +125,29 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
                 ms.sendMessage(new ShipMoveToSender(myAddress,senderAddress,playerId, userToUserMap.get(playerId),shipMovementResults));
                 //ms.sendMessage(new InfoMessage(myAddress, senderAddress,"корабль передвинулся, но мы этого пока не увидим",playerId));
             } else {
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Капитан, корабль не может туда плыть.",playerId));
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Капитан, корабль не может туда плыть.",playerId,userToUserMap.get(playerId)));
             }
         } else {
-            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Этот игрок вообще не участвует в играх",playerId));
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Этот игрок вообще не участвует в играх",playerId, userToUserMap.get(playerId)));
         }
     }
 
     public void coinAction(Integer piratId, Boolean pickCoin, Boolean dropCoin, Long firstPlayerId){
         if(pickCoin && dropCoin){
-            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId));
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId, userToUserMap.get(firstPlayerId)));
         } else if( !pickCoin && !dropCoin){
-            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId));
+            ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Ты прислал мне какую-то дичь", firstPlayerId, userToUserMap.get(firstPlayerId)));
         } else {
             final List<Result> coinAction = usersToGamesMap.get(firstPlayerId).coinAction(pickCoin, dropCoin, piratId, firstPlayerId);
             try{
             if(coinAction.get(0).getStatus()==-1){
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"У пирата уже есть монетка или ему нечего выбрасывать", firstPlayerId));
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"У пирата уже есть монетка или ему нечего выбрасывать", firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
             if(coinAction.get(0).getStatus()==-2){
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"В локации не было монетки", firstPlayerId));
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"В локации не было монетки", firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
             if( coinAction.get(0).getStatus()==0){
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Норм сообщение о монетке, но пока не могу его отрисовать", firstPlayerId));
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress,"Норм сообщение о монетке, но пока не могу его отрисовать", firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
             } catch(NullPointerException e){
                 System.out.println("Кто-то подсунул нам нулевой список, что за фигня");

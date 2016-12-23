@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.mail.park.mechanics.game.CoordPair;
 import ru.mail.park.messageSystem.Address;
 import ru.mail.park.messageSystem.MessageSystem;
-import ru.mail.park.messageSystem.MessagesToGameMechanics.GetNeighborsMessage;
-import ru.mail.park.messageSystem.MessagesToGameMechanics.InitGameMessage;
-import ru.mail.park.messageSystem.MessagesToGameMechanics.MovePiratMessage;
-import ru.mail.park.messageSystem.MessagesToGameMechanics.MoveShipMessage;
+import ru.mail.park.messageSystem.MessagesToGameMechanics.*;
 import ru.mail.park.model.UserProfile;
 
 /**
@@ -30,7 +27,7 @@ public class GameProgressService {
     }
 
     public void coinAction(Integer piratId, Boolean pickCoin, Boolean dropCoin, Long playerId){
-        ms.sendMessage(null);
+        ms.sendMessage(new CoinActionMessageToMechanics(myAddress,gameMechanincsAddress,playerId, piratId, true, false));
     }
 
     public void movePirat(Integer piratId, CoordPair targetCell, Long playerId){

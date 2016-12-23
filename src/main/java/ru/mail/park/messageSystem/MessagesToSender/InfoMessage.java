@@ -13,14 +13,18 @@ public class InfoMessage extends MessageToSender{
     @NotNull
     private Long playerId;
 
-    public InfoMessage(Address from, Address to, String messageContent, @NotNull Long playerId) {
+    @NotNull
+    private Long secondPLayerId;
+
+    public InfoMessage(Address from, Address to, String messageContent, @NotNull Long playerId, @NotNull  Long secondPlayer) {
         super(from, to);
         this.messageContent = messageContent;
         this.playerId = playerId;
+        this.secondPLayerId = secondPlayer;
     }
 
     @Override
     public void exec(SenderMessageToFront senderMessageToFront){
-        senderMessageToFront.infoMessage(messageContent, playerId);
+        senderMessageToFront.infoMessage(messageContent, playerId, secondPLayerId);
     }
 }

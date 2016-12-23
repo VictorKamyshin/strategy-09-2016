@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mail.park.mechanics.requests.toUsers.*;
+import ru.mail.park.mechanics.utils.results.GameOverResult;
 import ru.mail.park.mechanics.utils.results.MovementResult;
 import ru.mail.park.mechanics.utils.results.Result;
 import ru.mail.park.messageSystem.Abonent;
@@ -64,13 +65,14 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
-    public void infoMessage(String messageContent, Long playerId) {
+    public void infoMessage(String messageContent, Long playerId, Long secondPlayerId) {
         final MessageToClient.Request infoMessage = new MessageToClient.Request(); //вещь для отладки
         infoMessage.setMyMessage(messageContent);
         try {
             final Message responseMessage = new Message(MessageToClient.Request.class.getName(),
                     objectMapper.writeValueAsString(infoMessage));
             remotePointService.sendMessageToUser(playerId,responseMessage);
+            remotePointService.sendMessageToUser(secondPlayerId,responseMessage);
         } catch( IOException e){
             e.printStackTrace();
         }
@@ -125,6 +127,20 @@ public class SenderMessageToFront implements  Runnable, Abonent{
     }
 
     public void piratMove(List<Result> movementResults, Long activePlayerId, Long passivePlayerId){
+        if(movementResults.get(0) instanceof GameOverResult){
+            final GameOverResult result = (GameOverResult) movementResults.get(0);
+            final GameOverMessage.Request gameOverMessage = new GameOverMessage.Request();
+            gameOverMessage.setWinner(result.getWinnerId());
+            try {
+                final Message gameOver = new Message(GameOverMessage.Request.class.getName(),
+                        objectMapper.writeValueAsString(gameOverMessage));
+                remotePointService.sendMessageToUser(activePlayerId,gameOver);
+                remotePointService.sendMessageToUser(passivePlayerId,gameOver);
+            } catch( IOException e){
+                e.printStackTrace();
+            }
+        }
+
         final PiratMoveMessage.Request newTurnMessage = new PiratMoveMessage.Request();
         newTurnMessage.setActive(false);
         final List<MovementResult> moveResults = new ArrayList<>();

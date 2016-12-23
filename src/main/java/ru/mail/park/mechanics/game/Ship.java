@@ -43,6 +43,9 @@ public class Ship extends AbstractCell{
     }
 
     public void setLocation(CoordPair newLocation) {
+        resetNeighbors();
         this.location = newLocation;
     }
+
+
 }
