@@ -85,7 +85,7 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
             } else {
                 ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
-            if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>3){
+            if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>29){
                 System.out.println(usersToGamesMap.get(firstPlayerId).getCountOfTurns());
                 ms.sendMessage(new EndGameMessage(myAddress, senderAddress, firstPlayerId, userToUserMap.get(firstPlayerId)));
                 usersToGamesMap.remove(firstPlayerId);
