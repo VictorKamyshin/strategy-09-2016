@@ -87,7 +87,11 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
             }
             if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>3){
                 System.out.println(usersToGamesMap.get(firstPlayerId).getCountOfTurns());
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Game Over", firstPlayerId, userToUserMap.get(firstPlayerId)));
+                ms.sendMessage(new EndGameMessage(myAddress, senderAddress, firstPlayerId, userToUserMap.get(firstPlayerId)));
+                usersToGamesMap.remove(firstPlayerId);
+                usersToGamesMap.remove(userToUserMap.get(firstPlayerId));
+                userToUserMap.remove(userToUserMap.get(firstPlayerId));
+                userToUserMap.remove(firstPlayerId);
             }
         }
     }

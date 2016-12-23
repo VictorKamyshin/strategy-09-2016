@@ -66,6 +66,11 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         }
     }
 
+    public void endGame(Long fistPlayerId, Long secondPlayerId){
+        remotePointService.cutDownConnection(fistPlayerId, CloseStatus.NORMAL);
+        remotePointService.cutDownConnection(secondPlayerId, CloseStatus.NORMAL);
+    }
+
     public void infoMessage(String messageContent, Long playerId, Long secondPlayerId) {
         final MessageToClient.Request infoMessage = new MessageToClient.Request(); //вещь для отладки
         infoMessage.setMyMessage(messageContent);
@@ -75,8 +80,6 @@ public class SenderMessageToFront implements  Runnable, Abonent{
                     objectMapper.writeValueAsString(infoMessage));
             remotePointService.sendMessageToUser(playerId,responseMessage);
             remotePointService.sendMessageToUser(secondPlayerId,responseMessage);
-            remotePointService.cutDownConnection(playerId, CloseStatus.NORMAL);
-            remotePointService.cutDownConnection(secondPlayerId, CloseStatus.NORMAL);
         } catch( IOException e){
             e.printStackTrace();
         }
