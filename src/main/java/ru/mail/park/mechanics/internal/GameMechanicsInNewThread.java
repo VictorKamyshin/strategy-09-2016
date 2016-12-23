@@ -80,13 +80,14 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     public void movePirat(Integer piratId, CoordPair targetCell, Long firstPlayerId) {
         if (usersToGamesMap.containsKey(firstPlayerId)) {
             final List<Result> result = usersToGamesMap.get(firstPlayerId).movePirat(piratId, targetCell, firstPlayerId); //Сообщение для игровой механики
-            if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>4){
-                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Game Over", firstPlayerId, userToUserMap.get(firstPlayerId)));
-            }
             if(result==null){
                 ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Такой ход невозможен. Скорее всего, вы ошиблись в выборе клетки", firstPlayerId, userToUserMap.get(firstPlayerId)));
             } else {
                 ms.sendMessage(new PiratMoveResultMessage(myAddress, senderAddress,result,firstPlayerId, userToUserMap.get(firstPlayerId)));
+            }
+            if(usersToGamesMap.get(firstPlayerId).getCountOfTurns()>3){
+                System.out.println(usersToGamesMap.get(firstPlayerId).getCountOfTurns());
+                ms.sendMessage(new InfoMessage(myAddress, senderAddress, "Game Over", firstPlayerId, userToUserMap.get(firstPlayerId)));
             }
         }
     }

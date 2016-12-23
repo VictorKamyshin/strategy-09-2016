@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.CloseStatus;
 import ru.mail.park.mechanics.requests.toUsers.*;
 import ru.mail.park.mechanics.utils.results.GameOverResult;
 import ru.mail.park.mechanics.utils.results.MovementResult;
@@ -69,10 +70,13 @@ public class SenderMessageToFront implements  Runnable, Abonent{
         final MessageToClient.Request infoMessage = new MessageToClient.Request(); //вещь для отладки
         infoMessage.setMyMessage(messageContent);
         try {
+            System.out.println("Пытаемся отправить юзерам сообщение о конце игры");
             final Message responseMessage = new Message(MessageToClient.Request.class.getName(),
                     objectMapper.writeValueAsString(infoMessage));
             remotePointService.sendMessageToUser(playerId,responseMessage);
             remotePointService.sendMessageToUser(secondPlayerId,responseMessage);
+            remotePointService.cutDownConnection(playerId, CloseStatus.NORMAL);
+            remotePointService.cutDownConnection(secondPlayerId, CloseStatus.NORMAL);
         } catch( IOException e){
             e.printStackTrace();
         }
