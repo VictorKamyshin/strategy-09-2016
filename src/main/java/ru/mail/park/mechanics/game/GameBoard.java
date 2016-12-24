@@ -291,17 +291,17 @@ public class GameBoard {
                 boardMap[shipCord.getX()][shipCord.getY()].setPiratId(deadPiratId);
                 if(players[piratOwner].pirats[deadPiratId - 3 * piratOwner].getHaveCoin()){
                     results.add(new DropCoinResult(deadPiratId));
-                    players[piratOwner].pirats[deadPiratId-3*piratOwner].setHaveCoin(false);
-                    boardMap[targetX][targetY].addCoin();
+                   // players[piratOwner].pirats[deadPiratId-3*piratOwner].setHaveCoin(false);
+                    //boardMap[targetX][targetY].addCoin();
                 }
-                if(!this.pirats[piratId].getHaveCoin()){
+/*                if(!this.pirats[piratId].getHaveCoin()){
                     if (boardMap[targetX][targetY].getCoin()) {
                         results.add(new PickCoinResult(0, this.playerId,piratId));
                         this.pirats[piratId].setHaveCoin(true);
                     }
                 } else {
                     boardMap[targetX][targetY].addCoin();
-                }
+                } */
                 players[piratOwner].pirats[deadPiratId-3*piratOwner].setLocation(shipCord);
                 results.add(new MovementResult(piratOwner,deadPiratId-3*piratOwner,shipCord));
             } //мы не можем провести мертвого пирата через стандартный обработчик движения

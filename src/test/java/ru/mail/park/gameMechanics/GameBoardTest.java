@@ -31,7 +31,7 @@ public class GameBoardTest {
 
     }
 
-//    @Test
+    @Test
     public void gameWithPlayersInteractionTest(){
         final GameBoard testGameBoard = new GameBoard();
         final CoordPair[] firstPlayerPiratsCord = new CoordPair[3];
