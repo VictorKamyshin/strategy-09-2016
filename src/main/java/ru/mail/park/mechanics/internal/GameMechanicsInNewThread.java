@@ -3,6 +3,7 @@ package ru.mail.park.mechanics.internal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.mail.park.mechanics.GameContent;
 import ru.mail.park.mechanics.game.CoordPair;
 import ru.mail.park.mechanics.game.GameBoard;
@@ -164,6 +165,11 @@ public class GameMechanicsInNewThread implements Runnable, Abonent { //Нова�
     @Override
     public Address getAddress(){
         return this.myAddress;
+    }
+
+    @ExceptionHandler(Exception.class)
+    private void handleExeption(Exception e){
+        e.printStackTrace();
     }
 
 }
